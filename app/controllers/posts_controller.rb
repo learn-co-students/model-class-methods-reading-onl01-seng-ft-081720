@@ -1,7 +1,21 @@
 class PostsController < ApplicationController
+helper_method :params
 
   def index
-    @posts = Post.all
+    #list authors
+    @authors = Author.all
+      # filter the @posts list base on input
+      if !params[:author].blank? 
+        @posts = Post.by_author(params[:author]) 
+      elsif !params[:date].blank? 
+        if params[:date] == "Today" 
+          @posts = Post.from_today
+        else 
+          @posts = Post.old_news
+        end
+      else
+        @posts = Post.all
+     end   
   end
 
   def show
@@ -18,13 +32,15 @@ class PostsController < ApplicationController
     redirect_to post_path(@post)
   end
 
+  def edit
+    @post = Post.find(params[:id])
+  end
+
   def update
     @post = Post.find(params[:id])
     @post.update(params.require(:post))
     redirect_to post_path(@post)
   end
 
-  def edit
-    @post = Post.find(params[:id])
-  end
+  
 end

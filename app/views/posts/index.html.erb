@@ -1,4 +1,36 @@
+<!-- new code starts here 
+activate that filter so the new code at the top of our view
+-->
+<!-- this clutters the code it don't belong here 
+it will pull double requests to the database
+this code belongs in the controller
+-->
+  <%# if !params[:author].blank? %>
+    <%# @posts = Post.where(author: params[:author]) %>
+  <%# elsif !params[:date].blank? %>
+    <%# if params[:date] == "Today" %>
+      <%# @posts = Post.where("created_at >=?", Time.zone.today.beginning_of_day) %>
+      <%# else %>
+        <%# @posts = Post.where("created_at <?", Time.zone.today.beginning_of_day) %>
+      <%# end %>
+  <%# end %>
+<!-- it ends here -->
 <h1>Believe It Or Not I'm Blogging On Air</h1>
+<%# We want to start by adding some controls to our view to do the filtering: %>
+<div>
+  <h3>Filter posts:</h3>
+  <%= form_tag("/posts", method: "get") do %>
+  <%# use this method for creating a selection box for rails options_from_collection_for_select %>
+    <%= select_tag "author", options_from_collection_for_select(@authors, "id", "name"), include_blank: true %>
+    <%#= submit_tag "Author Search"%>
+
+  <!-- New Code -->
+    <%= select_tag "date", options_for_select(["Today", "Old News"]), include_blank: true %>
+    <%= submit_tag "Filter" %>
+  <!-- it ends -->
+  <% end %> 
+</div>
+
 <% @posts.each do |post| %>
   <div>
     <h2><%= post.title %></h2>
